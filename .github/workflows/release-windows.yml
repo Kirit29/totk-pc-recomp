@@ -45,7 +45,8 @@ jobs:
       # driver in the Khronos registry key), because the check runs with a cleaned environment and PATH.
       - name: Software Vulkan driver
         run: |
-          C:\msys64\usr\bin\bash.exe -lc "pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-mesa mingw-w64-ucrt-x86_64-vulkan-loader mingw-w64-ucrt-x86_64-vulkan-tools"
+          C:\msys64\usr\bin\bash.exe -lc "pacman -Sy --needed --noconfirm mingw-w64-ucrt-x86_64-mesa mingw-w64-ucrt-x86_64-vulkan-loader"
+          if ($LASTEXITCODE) { throw "pacman failed" }
           $bin = "C:\msys64\ucrt64\bin"
           $loader = Get-ChildItem $bin -Filter "*vulkan-1.dll" | Select-Object -First 1
           if (-not $loader) { throw "no Vulkan loader in $bin" }
@@ -56,7 +57,7 @@ jobs:
           $key = "HKLM:\SOFTWARE\Khronos\Vulkan\Drivers"
           New-Item -Path $key -Force | Out-Null
           New-ItemProperty -Path $key -Name $icd.FullName -Value 0 -PropertyType DWord -Force | Out-Null
-          & "$bin\vulkaninfo.exe" --summary
+          Write-Host "loader $($loader.FullName) -> System32; driver $($icd.FullName)"
 
       - name: Upstream references
         shell: bash
