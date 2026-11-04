@@ -5,7 +5,7 @@ name: Windows setup
 
 on:
   push:
-    branches: [main]
+    branches: [main, "ci-*"]
   workflow_dispatch:
 
 concurrency:
