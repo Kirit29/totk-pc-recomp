@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cwchar>
 #include <locale>
+#include <mutex>  // (std::lock_guard in ffx_vk.cpp: MSVC's and libstdc++'s headers bring it, llvm-mingw's libc++ does not)
 #include <new>
 #include <string>
 #endif
